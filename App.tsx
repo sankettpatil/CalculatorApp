@@ -1,118 +1,103 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { Button } from 'react-native-paper';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const CalculatorApp = () => {
+  const [input, setInput] = useState('');
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  const handleButtonPress = (value: string) => {
+    setInput((prev) => prev + value);
+  };
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  const handleEqualPress = () => {
+    try {
+      setInput(eval(input).toString()); 
+    } catch (error) {
+      setInput('Error');
+    }
+  };
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const handleClear = () => {
+    setInput('');
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.displayContainer}>
+        <Text style={styles.displayText}>{input || '0'}</Text>
+      </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.row}>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('1')}>1</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('2')}>2</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('3')}>3</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('+')}>+</Button>
         </View>
-      </ScrollView>
+        <View style={styles.row}>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('4')}>4</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('5')}>5</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('6')}>6</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('-')}>-</Button>
+        </View>
+        <View style={styles.row}>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('7')}>7</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('8')}>8</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('9')}>9</Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('*')}>*</Button>
+        </View>
+        <View style={styles.row}>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('0')}>0</Button>
+          <Button style={styles.button} mode="contained" onPress={handleClear}>C</Button>
+          <Button
+            style={[styles.button, { backgroundColor: 'green' }]} // Green background for '=' button
+            mode="contained"
+            onPress={handleEqualPress}
+          >
+            =
+          </Button>
+          <Button style={styles.button} mode="contained" onPress={() => handleButtonPress('/')}>/</Button>
+        </View>
+      </View>
+      <Text style={styles.footer}>Calc by Sanket</Text>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: 20,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  displayContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  displayText: {
+    fontSize: 60,
+    fontWeight: 'bold',
   },
-  highlight: {
-    fontWeight: '700',
+  buttonContainer: {
+    flex: 4,
+    justifyContent: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  button: {
+    width: 70,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footer: {
+    textAlign: 'center',
+    marginBottom: 10,
+    fontSize: 16,
   },
 });
 
-export default App;
+export default CalculatorApp;
